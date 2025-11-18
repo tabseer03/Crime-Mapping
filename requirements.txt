@@ -1,0 +1,7 @@
+flask
+pandas
+folium
+scikit-learn
+hdbscan
+geopy
+gunicorn
