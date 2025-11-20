@@ -3,42 +3,17 @@
 <head>
     <title>Crime Heatmaps</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 25px;
-        }
-        h1 {
-            margin-bottom: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        select, button {
-            padding: 6px 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            border: none;
-            padding: 8px 14px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .summary-box {
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #f3f3f3;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            width: fit-content;
-        }
+        body { font-family: Arial, sans-serif; padding: 25px; background: #eef6ff; }
+        h1 { margin-bottom: 20px; }
+        form { margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+        select, button { padding: 6px 10px; border-radius: 5px; border: 1px solid #ccc; }
+        button { background-color: #4CAF50; color: white; cursor: pointer; border: none; padding: 8px 14px; }
+        button:hover { background-color: #45a049; }
+        .summary-box { margin-bottom: 15px; padding: 10px; background: #fff; border-radius: 6px; border: 1px solid #ccc; width: fit-content; }
+        .card { margin-top: 30px; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #ccc; width: 75%; }
+        table { border-collapse: collapse; margin-top: 10px; }
+        table, th, td { border: 1px solid #ccc; padding: 6px 10px; }
+        th { background: #f9f9f9; }
     </style>
 </head>
 
@@ -46,6 +21,7 @@
 
 <h1>Crime Heatmaps</h1>
 
+<!-- FILTER FORM -->
 <form method="POST">
 
     <!-- TIME RANGE -->
@@ -64,29 +40,94 @@
         <option value="F" {% if selected_gender == "F" %}selected{% endif %}>Female</option>
     </select>
 
-    <!-- CRIME DOMAIN -->
+    <!-- DOMAIN -->
     <label><b>Domain:</b></label>
     <select name="domain">
         {% for d in domain_options %}
-        <option value="{{ d }}" {% if d == selected_domain %}selected{% endif %}>{{ d }}</option>
+        <option value="{{ d }}" {% if selected_domain == d %}selected{% endif %}>{{ d }}</option>
         {% endfor %}
     </select>
 
     <button type="submit">Generate</button>
 </form>
 
-<!-- DEBUG SUMMARY -->
+<!-- SUMMARY -->
 <div class="summary-box">
     <b>Filtered Results:</b><br>
     Incidents: {{ record_count }} <br>
-    Cities: {{ city_count }} <br>
-    Time: {{ selected_time }} <br>
-    Gender: {{ selected_gender }} <br>
-    Domain: {{ selected_domain }}
+    Cities: {{ city_count }}
 </div>
 
-<!-- MAP DISPLAY -->
+<!-- MAP -->
 <iframe src="/static/map.html" width="100%" height="600"></iframe>
+
+
+<!-- =================== 7-DAY FORECAST =================== -->
+<div class="card">
+    <h3>📈 7-Day Crime Forecast</h3>
+
+    <form action="/predict_crime" method="POST">
+        <button type="submit">Run Forecast</button>
+    </form>
+
+    {% if forecast_graph %}
+        <img src="data:image/png;base64,{{ forecast_graph }}" style="max-width:100%;border-radius:8px;margin-top:10px;">
+    {% endif %}
+
+    {% if forecast_table %}
+        <h4>Predicted totals</h4>
+        <table>
+            <tr><th>Date</th><th>Predicted Count</th></tr>
+            {% for d,cnt in forecast_table %}
+            <tr><td>{{ d }}</td><td>{{ cnt }}</td></tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</div>
+
+
+<!-- =================== CITY CRIME PREDICTION =================== -->
+<div class="card">
+    <h3>🏙 City-wise Crime Type Prediction</h3>
+
+    <form action="/predict_city_crimes" method="POST">
+
+        <label><b>Select City:</b></label>
+        <select name="city">
+            {% for c in city_options %}
+            <option value="{{ c }}" {% if selected_city == c %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Predict City Crime Profile</button>
+    </form>
+
+    {% if city_prediction %}
+        {% if city_prediction.error %}
+            <p><b>{{ city_prediction.error }}</b></p>
+        {% else %}
+            <h4>Prediction for {{ city_prediction.city }}</h4>
+
+            <b>Likely Crime Types:</b>
+            <ul>
+                {% for c in city_prediction.likely_crimes %}
+                <li>{{ c }}</li>
+                {% endfor %}
+            </ul>
+
+            <b>Likely Crime Domains:</b>
+            <ul>
+                {% for d in city_prediction.likely_domains %}
+                <li>{{ d }}</li>
+                {% endfor %}
+            </ul>
+
+            <p><b>Predicted Severity:</b> {{ city_prediction.predicted_severity }}</p>
+            <p><b>Confidence:</b> {{ city_prediction.confidence }}</p>
+        {% endif %}
+    {% endif %}
+
+</div>
 
 </body>
 </html>
