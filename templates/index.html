@@ -15,13 +15,10 @@
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
   />
-  <!-- Font Awesome (crime / security icons) -->
+  <!-- Font Awesome -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
   />
 
   <style>
@@ -30,18 +27,49 @@
       --card-bg: #0f1424;
       --accent: #ff4b5c;
       --accent-soft: rgba(255, 75, 92, 0.2);
-      --text-light: #f4f4f4;
-      --text-muted: #9ca3af;
+      --text-light: #f8fafc;
+      --text-muted: #cbd5e1;
     }
 
-    * {
-      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+    * { font-family: "Poppins", sans-serif; }
 
     body {
       background: radial-gradient(circle at top, #111827 0, #020617 45%, #000000 100%);
       color: var(--text-light);
       min-height: 100vh;
+    }
+
+    /* Improve readability */
+    .text-muted,
+    .small,
+    .form-label,
+    .card-dark,
+    .card-dark * {
+      color: #cbd5e1 !important;
+    }
+
+    .card-header-dark h5,
+    .card-header-dark h6 {
+      color: #f8fafc !important;
+    }
+
+    table.forecast-table td,
+    table.forecast-table th {
+      color: #f1f5f9 !important;
+    }
+
+    .crime-tag {
+      color: #e2e8f0 !important;
+      border-color: rgba(255,255,255,0.2) !important;
+    }
+
+    .badge {
+      color: #f8fafc !important;
+    }
+
+    select.form-select {
+      color: #f8fafc !important;
+      background-color: #0f172a !important;
     }
 
     .navbar {
@@ -56,19 +84,14 @@
       border: 1px solid rgba(148, 163, 184, 0.5);
       font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
     }
 
     .hero {
-      position: relative;
       margin-top: 72px;
       border-radius: 24px;
-      overflow: hidden;
       background:
         linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(127, 29, 29, 0.9)),
-        url("/static/img/crime-hero.jpg") center/cover no-repeat;
-      /* Put any non-graphic crime themed image here: city night, police tape, etc. */
+        url("/static/img/crime-hero.jpg") center/cover;
       padding: 28px 24px;
       box-shadow: 0 24px 80px rgba(0,0,0,0.65);
     }
@@ -78,56 +101,16 @@
       font-weight: 600;
     }
 
-    .hero-subtitle {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .chip i {
-      font-size: 0.8rem;
-      color: var(--accent);
-    }
-
     .stat-card {
-      background: linear-gradient(145deg, #020617, #020617);
+      background: #020617;
       border-radius: 18px;
       padding: 16px 18px;
       border: 1px solid rgba(148, 163, 184, 0.2);
     }
 
-    .stat-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-    }
-
     .stat-value {
       font-size: 1.2rem;
       font-weight: 600;
-    }
-
-    .stat-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(148, 163, 184, 0.08);
-      color: var(--accent);
     }
 
     .card-dark {
@@ -137,58 +120,20 @@
       box-shadow: 0 18px 50px rgba(15, 23, 42, 0.7);
     }
 
-    .card-header-dark {
-      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-      padding-bottom: 0.75rem;
-    }
-
     .form-select,
     .form-control {
-      background-color: #020617;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.35);
-      color: var(--text-light);
       font-size: 0.85rem;
-    }
-
-    .form-select:focus,
-    .form-control:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent-soft);
-      background-color: #020617;
-      color: #e5e7eb;
-    }
-
-    .btn-gradient {
-      border-radius: 999px;
-      border: none;
-      padding: 8px 18px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      background: linear-gradient(135deg, #fb7185, #ef4444);
-      color: white;
-      box-shadow: 0 12px 30px rgba(248, 113, 113, 0.45);
     }
 
     .btn-outline-soft {
       border-radius: 999px;
       padding: 8px 16px;
       border: 1px solid rgba(148, 163, 184, 0.6);
-      color: var(--text-light);
-      font-size: 0.8rem;
       background: rgba(15, 23, 42, 0.8);
-    }
-
-    .btn-outline-soft:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .map-wrapper {
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      background: #020617;
+      font-size: 0.8rem;
+      color: var(--text-light);
     }
 
     .map-wrapper iframe {
@@ -197,157 +142,52 @@
       border: none;
     }
 
-    .badge-pill {
-      border-radius: 999px;
-      font-size: 0.7rem;
-      padding: 3px 10px;
-    }
-
-    .severity-high {
-      background: rgba(239, 68, 68, 0.18);
-      color: #fecaca;
-      border: 1px solid rgba(248, 113, 113, 0.7);
-    }
-
-    .severity-medium {
-      background: rgba(234, 179, 8, 0.12);
-      color: #facc15;
-      border: 1px solid rgba(252, 211, 77, 0.6);
-    }
-
-    .severity-low {
-      background: rgba(34, 197, 94, 0.12);
-      color: #bbf7d0;
-      border: 1px solid rgba(74, 222, 128, 0.6);
-    }
-
-    table.forecast-table {
-      font-size: 0.8rem;
-    }
-
-    table.forecast-table thead {
-      color: var(--text-muted);
-    }
-
-    .crime-tag {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-    }
-
-    footer {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      padding: 1.5rem 0 0.5rem;
-    }
-
-    @media (max-width: 992px) {
-      .hero {
-        margin-top: 80px;
-      }
-      .map-wrapper iframe {
-        height: 350px;
-      }
-    }
+    .severity-high { background: rgba(239,68,68,0.18); color:#fecaca; border:1px solid rgba(248,113,113,0.7); }
+    .severity-medium { background: rgba(234,179,8,0.12); color:#facc15; border:1px solid rgba(252,211,77,0.6); }
+    .severity-low { background: rgba(34,197,94,0.12); color:#bbf7d0; border:1px solid rgba(74,222,128,0.6); }
   </style>
 </head>
 
 <body>
+
   <!-- NAVBAR -->
   <nav class="navbar fixed-top navbar-dark">
     <div class="container-fluid px-3 px-md-5">
       <div class="d-flex align-items-center gap-3">
-        <span class="stat-icon">
-          <i class="fas fa-shield-halved"></i>
-        </span>
+        <span class="stat-icon"><i class="fas fa-shield-halved"></i></span>
         <div>
           <div class="brand-pill mb-1">Crime Analytics</div>
           <div class="fw-semibold">Crime Pattern & Forecasting Tool</div>
         </div>
-      </div>
-
-      <div class="d-none d-md-flex align-items-center gap-3">
-        <span class="chip">
-          <i class="fas fa-map-location-dot"></i>
-          Heatmap & hotspot detection
-        </span>
-        <span class="chip">
-          <i class="fas fa-clock-rotate-left"></i>
-          Temporal trends & 7-day forecast
-        </span>
       </div>
     </div>
   </nav>
 
   <main class="container-fluid px-3 px-md-5 pb-5">
 
-    <!-- HERO SECTION -->
+    <!-- HERO -->
     <section class="hero mt-4 mt-md-5">
       <div class="row g-4 align-items-center">
         <div class="col-lg-8">
-          <p class="text-uppercase text-warning fw-semibold mb-2" style="font-size: 0.78rem;">
-            <i class="fa-solid fa-triangle-exclamation me-1"></i>
-            Smart policing assistant
+          <h1 class="hero-title mb-2">Visualize crime hotspots & anticipate risk before it escalates.</h1>
+          <p class="text-muted mb-3">
+            Filter incidents by time, gender and crime domain, view a live heatmap of cities,
+            and generate forecasts.
           </p>
-          <h1 class="hero-title mb-2">
-            Visualize crime hotspots & anticipate risk before it escalates.
-          </h1>
-          <p class="hero-subtitle mb-3">
-            Filter incidents by time, gender and crime domain, view a live heatmap of affected cities,
-            and generate short-term forecasts to support better resource deployment.
-          </p>
-
-          <div class="d-flex flex-wrap gap-2">
-            <span class="crime-tag">
-              <i class="fa-solid fa-sun-bright me-1"></i> Time-of-day analysis
-            </span>
-            <span class="crime-tag">
-              <i class="fa-solid fa-person-chalkboard me-1"></i> Victim gender profiling
-            </span>
-            <span class="crime-tag">
-              <i class="fa-solid fa-landmark me-1"></i> Domain-wise trends
-            </span>
-          </div>
         </div>
 
         <div class="col-lg-4">
           <div class="row g-3">
             <div class="col-6">
               <div class="stat-card h-100">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                  <span class="stat-label">Total incidents</span>
-                  <i class="fa-solid fa-list-check text-secondary"></i>
-                </div>
                 <div class="stat-value">{{ record_count }}</div>
-                <div class="mt-1 text-muted" style="font-size: 0.75rem;">
-                  Records loaded from dataset
-                </div>
+                <div class="text-muted" style="font-size: 0.75rem;">Total incidents</div>
               </div>
             </div>
             <div class="col-6">
               <div class="stat-card h-100">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                  <span class="stat-label">Cities covered</span>
-                  <i class="fa-solid fa-city text-secondary"></i>
-                </div>
                 <div class="stat-value">{{ city_count }}</div>
-                <div class="mt-1 text-muted" style="font-size: 0.75rem;">
-                  Unique urban locations
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="stat-card">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                  <span class="stat-label">Quick tip</span>
-                  <i class="fa-solid fa-lightbulb text-secondary"></i>
-                </div>
-                <div style="font-size: 0.8rem; color: var(--text-muted);">
-                  Use the filters to narrow down cases (e.g., <b>Night + Female + Cybercrime</b>) and
-                  instantly see how hotspots shift across the map.
-                </div>
+                <div class="text-muted" style="font-size: 0.75rem;">Cities covered</div>
               </div>
             </div>
           </div>
@@ -359,264 +199,164 @@
     <!-- MAIN GRID -->
     <section class="mt-4">
       <div class="row g-4">
+
         <!-- FILTERS -->
         <div class="col-lg-4">
           <div class="card-dark p-3 p-md-4 h-100">
-            <div class="card-header-dark d-flex align-items-center justify-content-between">
-              <div>
-                <h5 class="mb-0">
-                  <i class="fa-solid fa-filter me-2 text-danger"></i>
-                  Filter incidents
-                </h5>
-                <small class="text-muted">
-                  Adjust parameters and refresh the heatmap.
-                </small>
+
+            <form method="POST" action="/">
+              <!-- Time Range -->
+              <div class="mb-3">
+                <label class="form-label small text-uppercase text-muted mb-1">Time window</label>
+                <select class="form-select" name="time_range" id="time_range">
+                  {% for t in time_options %}
+                    <option value="{{ t }}" {% if t == selected_time %}selected{% endif %}>{{ t }}</option>
+                  {% endfor %}
+                </select>
               </div>
-            </div>
 
-            <div class="mt-3">
-              <form method="POST" action="/">
-                <!-- Time Range -->
-                <div class="mb-3">
-                  <label class="form-label small text-uppercase text-muted mb-1">
-                    Time window
-                  </label>
-                  <select class="form-select" name="time_range">
-                    {% for t in time_options %}
-                      <option value="{{ t }}" {% if t == selected_time %}selected{% endif %}>
-                        {{ t }}
-                      </option>
-                    {% endfor %}
-                  </select>
-                </div>
+              <!-- Gender -->
+              <div class="mb-3">
+                <label class="form-label small text-uppercase text-muted mb-1">Victim gender</label>
+                <select class="form-select" name="gender" id="gender">
+                  <option value="All" {% if selected_gender == "All" %}selected{% endif %}>All</option>
+                  <option value="M" {% if selected_gender == "M" %}selected{% endif %}>Male</option>
+                  <option value="F" {% if selected_gender == "F" %}selected{% endif %}>Female</option>
+                </select>
+              </div>
 
-                <!-- Gender -->
-                <div class="mb-3">
-                  <label class="form-label small text-uppercase text-muted mb-1">
-                    Victim gender
-                  </label>
-                  <select class="form-select" name="gender">
-                    <option value="All" {% if selected_gender == "All" %}selected{% endif %}>All</option>
-                    <option value="M"   {% if selected_gender == "M" %}selected{% endif %}>Male</option>
-                    <option value="F"   {% if selected_gender == "F" %}selected{% endif %}>Female</option>
-                  </select>
-                </div>
+              <!-- Domain -->
+              <div class="mb-3">
+                <label class="form-label small text-uppercase text-muted mb-1">Crime domain</label>
+                <select class="form-select" name="domain" id="domain">
+                  {% for d in domain_options %}
+                    <option value="{{ d }}" {% if d == selected_domain %}selected{% endif %}>{{ d }}</option>
+                  {% endfor %}
+                </select>
+              </div>
 
-                <!-- Domain -->
-                <div class="mb-3">
-                  <label class="form-label small text-uppercase text-muted mb-1">
-                    Crime domain
-                  </label>
-                  <select class="form-select" name="domain">
-                    {% for d in domain_options %}
-                      <option value="{{ d }}" {% if d == selected_domain %}selected{% endif %}>
-                        {{ d }}
-                      </option>
-                    {% endfor %}
-                  </select>
-                </div>
+              <!-- City -->
+              <div class="mb-4">
+                <label class="form-label small text-uppercase text-muted mb-1">Focus city</label>
+                <select class="form-select" name="city" id="city">
+                  <option value="" {% if not selected_city %}selected{% endif %}>All cities</option>
+                  {% for c in city_options %}
+                    <option value="{{ c }}" {% if c == selected_city %}selected{% endif %}>{{ c }}</option>
+                  {% endfor %}
+                </select>
+              </div>
 
-                <!-- City (optional, for display / future use) -->
-                <div class="mb-4">
-                  <label class="form-label small text-uppercase text-muted mb-1">
-                    Focus city (display only)
-                  </label>
-                  <select class="form-select" name="city">
-                    <option value="" {% if not selected_city %}selected{% endif %}>All cities</option>
-                    {% for c in city_options %}
-                      <option value="{{ c }}" {% if c == selected_city %}selected{% endif %}>
-                        {{ c }}
-                      </option>
-                    {% endfor %}
-                  </select>
-                  <small class="text-muted" style="font-size: 0.7rem;">
-                    Currently not filtering the map by city; used in prediction section below.
-                  </small>
-                </div>
+              <!-- Removed Update Button -->
+              <div class="d-flex flex-wrap gap-2">
+                <a href="/" class="btn btn-outline-soft">Reset</a>
+              </div>
+            </form>
 
-                <div class="d-flex flex-wrap gap-2">
-                  <button type="submit" class="btn btn-gradient">
-                    <i class="fa-solid fa-fire-flame-curved me-1"></i>
-                    Update heatmap
-                  </button>
-                  <a href="/" class="btn btn-outline-soft">
-                    <i class="fa-solid fa-rotate-left me-1"></i>
-                    Reset
-                  </a>
-                </div>
-              </form>
-            </div>
           </div>
 
-          <!-- CITY PREDICTION CARD -->
+          <!-- CITY PREDICTION -->
           <div class="card-dark p-3 p-md-4 mt-4">
-            <div class="card-header-dark d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="mb-0">
-                  <i class="fa-solid fa-location-crosshairs me-2 text-info"></i>
-                  City crime profile
-                </h6>
-                <small class="text-muted">Get likely crime types & severity.</small>
+            <form method="POST" action="/predict_city_crimes">
+              <div class="mb-3">
+                <label class="form-label small text-uppercase text-muted mb-1">Select city</label>
+                <select class="form-select" name="city">
+                  {% for c in city_options %}
+                    <option value="{{ c }}" {% if city_prediction and city_prediction.city == c %}selected{% endif %}>
+                      {{ c }}
+                    </option>
+                  {% endfor %}
+                </select>
               </div>
-            </div>
 
-            <div class="mt-3">
-              <form method="POST" action="/predict_city_crimes">
-                <div class="mb-3">
-                  <label class="form-label small text-uppercase text-muted mb-1">
-                    Select city
-                  </label>
-                  <select class="form-select" name="city" required>
-                    {% for c in city_options %}
-                      <option value="{{ c }}"
-                        {% if city_prediction and city_prediction.city == c %}selected{% endif %}
-                      >
-                        {{ c }}
-                      </option>
+              <button class="btn btn-outline-soft w-100" type="submit">
+                Predict crime pattern
+              </button>
+            </form>
+
+            {% if city_prediction %}
+              <div class="mt-3 p-3 rounded-4" style="background: rgba(15,23,42,0.8); border:1px dashed rgba(148,163,184,0.4);">
+
+                {% if city_prediction.error %}
+                  <div class="text-danger small">{{ city_prediction.error }}</div>
+                {% else %}
+                  <div class="fw-semibold mb-2">{{ city_prediction.city }}</div>
+
+                  {% set sev = city_prediction.predicted_severity %}
+                  <span class="badge badge-pill {% if sev == 'High' %}severity-high{% elif sev == 'Medium' %}severity-medium{% else %}severity-low{% endif %}">
+                    Severity: {{ sev }}
+                  </span>
+
+                  <div class="small mt-2">
+                    <span class="text-muted">Likely crime descriptions:</span><br/>
+                    {% for desc in city_prediction.likely_crimes %}
+                      <span class="crime-tag mt-1 d-inline-block">{{ desc }}</span>
                     {% endfor %}
-                  </select>
-                </div>
+                  </div>
 
-                <button class="btn btn-outline-soft w-100" type="submit">
-                  <i class="fa-solid fa-magnifying-glass-location me-1"></i>
-                  Predict crime pattern
-                </button>
-              </form>
+                  <div class="small mt-2">
+                    <span class="text-muted">Likely domains:</span><br/>
+                    {% for dom in city_prediction.likely_domains %}
+                      <span class="crime-tag mt-1 d-inline-block">{{ dom }}</span>
+                    {% endfor %}
+                  </div>
 
-              {% if city_prediction %}
-                <div class="mt-3 p-3 rounded-4" style="background: rgba(15,23,42,0.8); border:1px dashed rgba(148,163,184,0.4);">
-                  {% if city_prediction.error %}
-                    <div class="text-danger small">
-                      <i class="fa-solid fa-circle-exclamation me-1"></i>
-                      {{ city_prediction.error }}
-                    </div>
-                  {% else %}
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <div class="fw-semibold">
-                        {{ city_prediction.city }}
-                      </div>
-                      {% set sev = city_prediction.predicted_severity %}
-                      <span class="badge badge-pill
-                        {% if sev == 'High' %}severity-high{% elif sev == 'Medium' %}severity-medium{% else %}severity-low{% endif %}">
-                        Severity: {{ sev }}
-                      </span>
-                    </div>
-
-                    <div class="small mb-2">
-                      <span class="text-muted">Likely crime descriptions:</span><br />
-                      {% for desc in city_prediction.likely_crimes %}
-                        <span class="crime-tag mt-1 d-inline-block">{{ desc }}</span>
-                      {% endfor %}
-                    </div>
-
-                    <div class="small mb-2">
-                      <span class="text-muted">Likely domains:</span><br />
-                      {% for dom in city_prediction.likely_domains %}
-                        <span class="crime-tag mt-1 d-inline-block">{{ dom }}</span>
-                      {% endfor %}
-                    </div>
-
-                    <div class="small text-muted">
-                      Confidence:
-                      <span class="fw-semibold">{{ city_prediction.confidence }}</span>
-                    </div>
-                  {% endif %}
-                </div>
-              {% endif %}
-            </div>
+                  <div class="small text-muted mt-2">
+                    Confidence: <b>{{ city_prediction.confidence }}</b>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
           </div>
         </div>
 
         <!-- MAP + FORECAST -->
         <div class="col-lg-8">
-          <div class="card-dark p-3 p-md-4 mb-4">
-            <div class="card-header-dark d-flex align-items-center justify-content-between">
-              <div>
-                <h5 class="mb-0">
-                  <i class="fa-solid fa-map-location-dot me-2 text-primary"></i>
-                  Crime heatmap
-                </h5>
-                <small class="text-muted">
-                  Each marker represents incidents aggregated at city level.
-                </small>
-              </div>
-              <span class="badge badge-pill severity-medium">
-                <i class="fa-solid fa-info-circle me-1"></i>
-                Map auto-updates with filters
-              </span>
-            </div>
 
-            <div class="mt-3 map-wrapper">
-              <!-- We add ?v={{ record_count }} to slightly bust cache when data changes -->
+          <!-- MAP -->
+          <div class="card-dark p-3 p-md-4 mb-4">
+            <h5><i class="fa-solid fa-map-location-dot me-2 text-primary"></i>Crime heatmap</h5>
+
+            <div class="mt-3 map-wrapper" id="heatmap-container">
               <iframe src="{{ url_for('static', filename='map.html') }}?v={{ record_count }}"></iframe>
             </div>
           </div>
 
-          <!-- FORECAST CARD -->
+          <!-- FORECAST -->
           <div class="card-dark p-3 p-md-4">
-            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-              <div>
-                <h5 class="mb-0">
-                  <i class="fa-solid fa-chart-line me-2 text-success"></i>
-                  7-day crime forecast
-                </h5>
-                <small class="text-muted">
-                  Uses historical daily counts and ARIMA; falls back to average if data is sparse.
-                </small>
-              </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5><i class="fa-solid fa-chart-line me-2 text-success"></i>7-day forecast</h5>
+
               <form method="POST" action="/predict_crime">
-                <button type="submit" class="btn btn-gradient">
-                  <i class="fa-solid fa-bolt me-1"></i>
-                  Generate forecast
-                </button>
+                <button type="submit" class="btn btn-gradient">Generate forecast</button>
               </form>
             </div>
 
             {% if forecast_graph %}
               <div class="row g-3">
                 <div class="col-md-7">
-                  <div class="p-2 rounded-4" style="background:#020617;">
-                    <img
-                      src="data:image/png;base64,{{ forecast_graph }}"
-                      alt="Forecast graph"
-                      class="img-fluid rounded-4"
-                    />
-                  </div>
+                  <img src="data:image/png;base64,{{ forecast_graph }}" class="img-fluid rounded-4" />
                 </div>
+
                 <div class="col-md-5">
-                  <div class="p-2 rounded-4" style="background:#020617;">
-                    <table class="table table-sm table-borderless mb-0 forecast-table align-middle">
-                      <thead>
-                        <tr>
-                          <th>Date</th>
-                          <th class="text-end">Predicted incidents</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for d, c in forecast_table %}
-                          <tr>
-                            <td>{{ d }}</td>
-                            <td class="text-end">
-                              <span class="badge badge-pill bg-dark text-light">{{ c }}</span>
-                            </td>
-                          </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                  <p class="mt-2 mb-0 text-muted" style="font-size: 0.75rem;">
-                    Note: counts are rounded and truncated at 0. This module is for
-                    exploratory insights and should not be treated as a strict prediction engine.
-                  </p>
+                  <table class="table table-sm table-borderless forecast-table">
+                    <thead>
+                      <tr><th>Date</th><th class="text-end">Count</th></tr>
+                    </thead>
+                    <tbody>
+                      {% for d,c in forecast_table %}
+                      <tr>
+                        <td>{{ d }}</td>
+                        <td class="text-end"><span class="badge bg-dark">{{ c }}</span></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
                 </div>
               </div>
+
             {% else %}
-              <div class="text-center text-muted small">
-                <i class="fa-regular fa-circle-play mb-2" style="font-size:1.4rem;"></i>
-                <p class="mb-1">
-                  Click <b>Generate forecast</b> to view a 7-day prediction graph and table.
-                </p>
-              </div>
+              <div class="text-center text-muted small">Click “Generate forecast”.</div>
             {% endif %}
 
           </div>
@@ -624,14 +364,35 @@
       </div>
     </section>
 
-    <footer class="mt-4 text-center">
-      <div>
-        <i class="fa-solid fa-shield-heart me-1"></i>
-        Built for academic research and awareness — not for real-time policing decisions.
-      </div>
-    </footer>
   </main>
 
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- jQuery for AJAX -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- AJAX Map Update -->
+  <script>
+    function updateMap() {
+      $.ajax({
+        url: "/update_map",
+        method: "POST",
+        data: {
+          time_range: $("#time_range").val(),
+          gender: $("#gender").val(),
+          domain: $("#domain").val(),
+          city: $("#city").val()
+        },
+        success: function(res) {
+          $("#heatmap-container").html(res.map_html);
+        }
+      });
+    }
+
+    // Trigger map update on filter change
+    $("#time_range, #gender, #domain, #city").on("change", updateMap);
+  </script>
+
 </body>
 </html>

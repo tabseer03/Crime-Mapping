@@ -1,5 +1,4 @@
-# app.py
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from src.data_loader import load_data
 from src.preprocess import parse_datetime
 from src.aggregations import group_by_city
@@ -23,7 +22,7 @@ app = Flask(__name__)
 raw = load_data()
 data = parse_datetime(raw)
 
-# ------------------ TIME WINDOWS ------------------
+# Time windows
 time_windows = {
     "All": None,
     "Morning (05–12)": (5, 12),
@@ -33,7 +32,6 @@ time_windows = {
     "Late Night (22–02)": (22, 2)
 }
 
-# ------------------ HELPERS ------------------
 def filter_time_window(df, start_hour, end_hour):
     if start_hour is None:
         return df
@@ -42,25 +40,24 @@ def filter_time_window(df, start_hour, end_hour):
     else:
         return df[(df['Hour'] >= start_hour) | (df['Hour'] < end_hour)]
 
-
 def add_coordinates(df):
     df['lat'] = df['City'].map(lambda c: city_coords.get(c, (None, None))[0])
     df['lon'] = df['City'].map(lambda c: city_coords.get(c, (None, None))[1])
     return df
-
 
 def police_to_severity(x):
     try:
         x = float(x)
     except:
         return "Medium"
-
     if x >= 13: return "High"
     elif x >= 6: return "Medium"
     return "Low"
 
 
-# ================== MAIN HEATMAP ROUTE ==================
+# ======================================================
+# MAIN PAGE
+# ======================================================
 @app.route("/", methods=["GET", "POST"])
 def index():
 
@@ -74,8 +71,7 @@ def index():
     # 1) TIME FILTER
     tw = time_windows.get(selected_time_label)
     if tw:
-        start, end = tw
-        df = filter_time_window(df, start, end)
+        df = filter_time_window(df, tw[0], tw[1])
 
     # 2) GENDER FILTER
     if selected_gender in ["M", "F"]:
@@ -85,16 +81,16 @@ def index():
     if selected_domain != "All":
         df = df[df["Crime Domain"] == selected_domain]
 
-    # Add severity field
+    # Add severity
     if "Police Deployed" in df.columns:
         df["Severity_Level"] = df["Police Deployed"].apply(police_to_severity)
     else:
         df["Severity_Level"] = "Medium"
 
-    # Group & heatmap
     grouped = group_by_city(df)
     grouped = add_coordinates(grouped)
 
+    # Generate heatmap
     m = heatmap_from_grouped(grouped)
     m.save("static/map.html")
 
@@ -103,7 +99,6 @@ def index():
 
     return render_template(
         "index.html",
-        # selected fields preserved
         selected_time=selected_time_label,
         selected_gender=selected_gender,
         selected_domain=selected_domain,
@@ -118,16 +113,72 @@ def index():
     )
 
 
-# ================== 7-DAY FORECAST ROUTE ==================
+# ======================================================
+# AJAX MAP UPDATE ROUTE
+# ======================================================
+@app.route("/update_map", methods=["POST"])
+def update_map():
+
+    selected_time = request.form.get("time_range", "All")
+    selected_gender = request.form.get("gender", "All")
+    selected_domain = request.form.get("domain", "All")
+    selected_city = request.form.get("city", None)
+
+    df = data.copy()
+
+    # Time filter
+    tw = time_windows.get(selected_time)
+    if tw:
+        df = filter_time_window(df, tw[0], tw[1])
+
+    # Gender filter
+    if selected_gender in ["M", "F"]:
+        df = df[df["Victim Gender"] == selected_gender]
+
+    # Domain filter
+    if selected_domain != "All":
+        df = df[df["Crime Domain"] == selected_domain]
+
+    # City filter (optional)
+    if selected_city and selected_city != "All":
+        df = df[df["City"] == selected_city]
+
+    # Severity
+    if "Police Deployed" in df.columns:
+        df["Severity_Level"] = df["Police Deployed"].apply(police_to_severity)
+    else:
+        df["Severity_Level"] = "Medium"
+
+    grouped = group_by_city(df)
+    grouped = add_coordinates(grouped)
+
+    # Update heatmap
+    m = heatmap_from_grouped(grouped)
+    m.save("static/map.html")
+
+    return {
+        "map_html": '<iframe src="/static/map.html?v=1" width="100%" height="430px"></iframe>'
+    }
+
+
+# ======================================================
+# 7-DAY FORECAST ROUTE
+# ======================================================
 @app.route("/predict_crime", methods=["POST"])
 def predict_crime():
+
+    # preserve filters
+    selected_time_label = request.form.get("time_range", "All")
+    selected_gender = request.form.get("gender", "All")
+    selected_domain = request.form.get("domain", "All")
+    selected_city = request.form.get("city", None)
 
     df_full = data.copy()
     df_full["Date"] = pd.to_datetime(df_full["Date"])
 
     daily = df_full.groupby("Date").size().reset_index(name="Count").sort_values("Date")
 
-    # ------------ BUILD FORECAST SAFELY (NO KEYERROR) ------------
+    # Forecast logic
     if len(daily) < 10:
         avg = int(daily["Count"].mean()) if len(daily) > 0 else 0
         forecast = [avg] * 7
@@ -135,10 +186,7 @@ def predict_crime():
         try:
             model = auto_arima(daily["Count"], seasonal=False, suppress_warnings=True)
             forecast_raw = model.predict(n_periods=7)
-
-            # Convert to clean Python list
             forecast = [int(max(0, round(float(x)))) for x in list(forecast_raw)]
-
         except:
             avg = int(daily["Count"].mean())
             forecast = [avg] * 7
@@ -146,17 +194,15 @@ def predict_crime():
     last_date = daily["Date"].max()
     future_dates = pd.date_range(last_date + pd.Timedelta(days=1), periods=7)
 
-    forecast_table = [
-        (future_dates[i].strftime("%Y-%m-%d"), forecast[i])
-        for i in range(7)
-    ]
+    forecast_table = [(future_dates[i].strftime("%Y-%m-%d"), forecast[i]) for i in range(7)]
 
-    # Plot visualization
+    # Create Plot
     plt.figure(figsize=(8,4))
     plt.plot(daily["Date"], daily["Count"], label="Past")
     plt.plot(future_dates, forecast, marker="o", linestyle="--", label="Forecast")
     plt.title("Crime counts — historical + 7-day forecast")
-    plt.legend(); plt.tight_layout()
+    plt.legend()
+    plt.tight_layout()
 
     buf = BytesIO()
     plt.savefig(buf, format="png")
@@ -170,11 +216,11 @@ def predict_crime():
     return render_template(
         "index.html",
 
-        # preserve selections
-        selected_time="All",
-        selected_gender="All",
-        selected_domain="All",
-        selected_city=None,
+        # preserve filters
+        selected_time=selected_time_label,
+        selected_gender=selected_gender,
+        selected_domain=selected_domain,
+        selected_city=selected_city,
 
         time_options=list(time_windows.keys()),
         domain_options=domain_options,
@@ -187,15 +233,21 @@ def predict_crime():
     )
 
 
-# ================== CITY CRIME TYPE PREDICTION ==================
+# ======================================================
+# CITY CRIME PREDICTION
+# ======================================================
 @app.route("/predict_city_crimes", methods=["POST"])
 def predict_city_crimes():
 
-    city = request.form.get("city")
-    df_city = data[data["City"] == city]
+    selected_time_label = request.form.get("time_range", "All")
+    selected_gender = request.form.get("gender", "All")
+    selected_domain = request.form.get("domain", "All")
+    selected_city = request.form.get("city", None)
+
+    df_city = data[data["City"] == selected_city]
 
     if df_city.empty:
-        result = {"error": f"No data for {city}"}
+        result = {"error": f"No data for {selected_city}"}
     else:
         top_descriptions = df_city["Crime Description"].value_counts().head(3).index.tolist()
         top_domains = df_city["Crime Domain"].value_counts().head(3).index.tolist()
@@ -203,7 +255,7 @@ def predict_city_crimes():
         predicted_severity = police_to_severity(avg_pd)
 
         result = {
-            "city": city,
+            "city": selected_city,
             "likely_crimes": top_descriptions,
             "likely_domains": top_domains,
             "predicted_severity": predicted_severity,
@@ -218,11 +270,10 @@ def predict_city_crimes():
 
         city_prediction=result,
 
-        # preserve city selection
-        selected_time="All",
-        selected_gender="All",
-        selected_domain="All",
-        selected_city=city,
+        selected_time=selected_time_label,
+        selected_gender=selected_gender,
+        selected_domain=selected_domain,
+        selected_city=selected_city,
 
         time_options=list(time_windows.keys()),
         domain_options=domain_options,
@@ -233,6 +284,6 @@ def predict_city_crimes():
     )
 
 
-# ================== RUN APP ==================
+# ======================================================
 if __name__ == "__main__":
     app.run(debug=True)
